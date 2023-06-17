@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 from flask import Flask, request, render_template, flash, redirect, url_for
 
 #sesuaikan dengan path
-UPLOAD_FOLDER = '/Users/kharism/Downloads/img2sketch/static/uploads'
+UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 
 app = Flask(__name__)
@@ -58,8 +58,8 @@ def make_sketch(img, g, gb):
     return final_result
 
 @app.route('/')
-def home():
-    return render_template('home.html')
+def index():
+    return render_template('index.html')
 
 @app.route('/sketch', methods=['POST'])
 def sketch():
@@ -74,16 +74,16 @@ def sketch():
             sketch_img = make_sketch(img, g, gb)
             if sketch_img is None:
                 flash("Sketch creation failed")
-                return redirect(url_for('home'))
+                return redirect(url_for('index'))
             
             sketch_img_name = filename.split('.')[0] + "_sketch.jpg"
             _ = cv2.imwrite(UPLOAD_FOLDER + '/' + sketch_img_name, sketch_img)
-            return render_template('home.html', org_img_name=filename, sketch_img_name=sketch_img_name)
+            return render_template('index.html', org_img_name=filename, sketch_img_name=sketch_img_name)
         except Exception as e:
             flash(f"An error occurred: {str(e)}")
     else:
         flash("Invalid file format")
-    return redirect(url_for('home'))
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True)
