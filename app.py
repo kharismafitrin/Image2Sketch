@@ -58,8 +58,8 @@ def make_sketch(img, g, gb):
     return final_result
 
 @app.route('/')
-def index():
-    return render_template('index.html')
+def home():
+    return render_template('home.html')
 
 @app.route('/sketch', methods=['POST'])
 def sketch():
@@ -74,16 +74,16 @@ def sketch():
             sketch_img = make_sketch(img, g, gb)
             if sketch_img is None:
                 flash("Sketch creation failed")
-                return redirect(url_for('index'))
+                return redirect(url_for('home'))
             
             sketch_img_name = filename.split('.')[0] + "_sketch.jpg"
             _ = cv2.imwrite(UPLOAD_FOLDER + '/' + sketch_img_name, sketch_img)
-            return render_template('index.html', org_img_name=filename, sketch_img_name=sketch_img_name)
+            return render_template('home.html', org_img_name=filename, sketch_img_name=sketch_img_name)
         except Exception as e:
             flash(f"An error occurred: {str(e)}")
     else:
         flash("Invalid file format")
-    return redirect(url_for('index'))
+    return redirect(url_for('home'))
 
 if __name__ == '__main__':
     app.run(debug=True)
